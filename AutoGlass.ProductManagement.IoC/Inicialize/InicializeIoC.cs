@@ -1,7 +1,7 @@
-﻿using AutoGlass.ProductManagement.Application.DTOs;
-using AutoGlass.ProductManagement.Application.Interfaces;
+﻿using AutoGlass.ProductManagement.Application.DTOs.Product;
+using AutoGlass.ProductManagement.Application.Interfaces.Product;
 using AutoGlass.ProductManagement.Application.Services;
-using AutoGlass.ProductManagement.Application.Validators;
+using AutoGlass.ProductManagement.Application.Validators.Product;
 using AutoGlass.ProductManagement.Context;
 using AutoGlass.ProductManagement.Domain.Interfaces.Repositories;
 using AutoGlass.ProductManagement.Domain.Interfaces.Services;
@@ -30,11 +30,13 @@ namespace AutoGlass.ProductManagement.IoC.Inicialize
             services.AddScoped<IProductRepository, ProductRepository>();
 
             //Validators
-            services.AddScoped<IValidator<CreateProductDto>, CreateProductDtoValidator>();
-                        
+            services.AddScoped<IValidator<CreateProductDto>, CreateProductValidator>();
+            services.AddScoped<IValidator<ProductDto>, EditProductValidator>();
+
             //Services
             services.AddScoped<IProductAppService, ProductAppService>();
-            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductFilterAppService, ProductFilterAppService>();
+            services.AddScoped<IProductService, ProductService>();                        
         }
     }
 }

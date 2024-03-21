@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 
-namespace AutoGlass.ProductManagement.Application.DTOs
+namespace AutoGlass.ProductManagement.Application.DTOs.Product.Response
 {
     public class CreateProductResponseDto
     {

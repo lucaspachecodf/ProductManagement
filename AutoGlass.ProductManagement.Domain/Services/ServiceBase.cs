@@ -1,6 +1,7 @@
 ﻿using AutoGlass.ProductManagement.Domain.Entities;
 using AutoGlass.ProductManagement.Domain.Interfaces.Repositories;
 using AutoGlass.ProductManagement.Domain.Interfaces.Services;
+using System.Linq.Expressions;
 
 namespace AutoGlass.ProductManagement.Domain.Services
 {
@@ -18,19 +19,29 @@ namespace AutoGlass.ProductManagement.Domain.Services
             return _repository.Insert(entity);
         }
 
-        public void Update(TEntity entity)
+        public bool Update(TEntity entity)
         {
-            _repository.Update(entity);
+            return _repository.Update(entity);
         }
 
-        public void Delete(TSource id)
+        public bool Delete(TSource id)
         {
-            _repository.Delete(id);
+            return _repository.Delete(id);
         }
 
-        public void Delete(TEntity entity)
+        public bool Delete(TEntity entity)
         {
-            _repository.Delete(entity);
-        }        
+            return _repository.Delete(entity);
+        }
+
+        public TEntity GetById(TSource id)
+        {
+            return _repository.GetById(id);
+        }
+
+        public IEnumerable<TEntity> FindByProperty(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return _repository.FindByProperty(filterExpression);
+        }
     }
 }

@@ -35,33 +35,54 @@ namespace AutoGlass.ProductManagement.Infrastructure.Data.Repositories
 
         public TSource Insert(TEntity entity)
         {
-            var id = _dbSet.Add(entity).Entity.Id;
+            _dbSet.Add(entity);
             Save();
 
-            return id;
+            return entity.Id;
         }
 
-        public void Delete(TSource id)
+        public bool Delete(TSource id)
         {
             var entity = GetById(id);
 
             if (entity != null)
             {
-                Delete(entity);
+                return Delete(entity);
+            }
+
+            return false;
+        }
+
+        public bool Delete(TEntity entity)
+        {
+            try
+            {
+                _dbSet.Remove(entity);
+                Save();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 
-        public void Delete(TEntity entity)
+        public bool Update(TEntity entity)
         {
-            _dbSet.Remove(entity);
-            Save();
+            try
+            {
+                _context.Update(entity);
+                Save();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
-        public void Update(TEntity entity)
-        {
-            _context.Update(entity);
-            Save();
-        }
         public void Save() => _context.SaveChanges();
         public async Task SaveAsync() => await _context.SaveChangesAsync();
 
@@ -75,10 +96,11 @@ namespace AutoGlass.ProductManagement.Infrastructure.Data.Repositories
                     (_dbSet, (current, expression) => current.Include(expression));
             }
             else
-                set = this._context.Set<TEntity>();
+                set = _context.Set<TEntity>();
 
             return set.Any(predicate);
         }
+
         public TEntity GetById(TSource ID, params Expression<Func<TEntity, object>>[] includeExpressions)
         {
             if (includeExpressions.Any())
@@ -96,6 +118,11 @@ namespace AutoGlass.ProductManagement.Infrastructure.Data.Repositories
         {
             return includeExpressions.Aggregate<Expression<Func<TEntity, object>>, IQueryable<TEntity>>
                (_dbSet, (current, expression) => current.Include(expression));
+        }
+
+        public IEnumerable<TEntity> FindByProperty(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return _dbSet.Where(filterExpression.Compile());
         }
 
         public TResult GetFirstOrDefault<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TEntity, bool>> predicate = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, bool disableTracking = true)

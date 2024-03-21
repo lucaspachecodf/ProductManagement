@@ -26,15 +26,26 @@ namespace AutoGlass.ProductManagement.Context.Configuration
 
             builder.Property(p => p.ManufacturingDate)
                 .HasColumnName("ManufacturingDate")
-                .HasColumnType("datetime");
+                .HasColumnType("datetime");                
 
             builder.Property(p => p.ExpirationDate)
                 .HasColumnName("ExpirationDate")
-                .HasColumnType("datetime");
+                .HasColumnType("datetime");                
 
-            builder.Property(p => p.SupplierCode).HasColumnName("SupplierCode");
-            builder.Property(p => p.SupplierDescription).HasColumnName("SupplierDescription");
-            builder.Property(p => p.SupplierCNPJ).HasColumnName("SupplierCNPJ");
+            builder.Property(p => p.SupplierCode)
+                .HasColumnName("SupplierCode")
+                .HasMaxLength(100)
+                .IsRequired(false);
+
+            builder.Property(p => p.SupplierDescription)
+                .HasColumnName("SupplierDescription")
+                .HasMaxLength(200)
+                .IsRequired(false);
+
+            builder.Property(p => p.SupplierCNPJ)
+                .HasColumnName("SupplierCNPJ")
+                .HasMaxLength(18)
+                .IsRequired(false);
         }
     }
 }
